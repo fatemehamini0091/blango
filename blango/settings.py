@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,8 +25,20 @@ SECRET_KEY = 'django-insecure-+sn%dpa!086+g+%44z9*^j^q-u4n!j(#wl)x9a%_1op@zz2+1-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+"""
+The two biggest obstacles in getting Django to run inside Codio are recognizing the unique 
+host name for each Codio project and cookies. The changes below will tell Django the exact 
+host name of the Codio project and alter how Django handles cookies. Make sure your settings 
+match the ones below.
+"""
+ALLOWED_HOSTS = ['*']
+X_FRAME_OPTIONS = 'ALLOW-FROM ' + os.environ.get('CODIO_HOSTNAME') + '-8000.codio.io'
+CSRF_COOKIE_SAMESITE = None
+CSRF_TRUSTED_ORIGINS = ['https://' + os.environ.get('CODIO_HOSTNAME') + '-8000.codio.io']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
 
 
 # Application definition
@@ -37,16 +50,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'blog',
 ]
-
+"""
+Scroll down a bit and look for the definition of the variable MIDDLEWARE. 
+Comment out the two lines that refer to csrf. CSRF stands for cross-site request forgery, 
+which is a way for a malicious actor to force a user to perform an unintended action. 
+Djano normally has CSRF protections in place, but we need to disable them. 
+There are serious security implications to doing so, however your project on Codio is not 
+publicly available on the internet. 
+Comment out the two lines in the MIDDLEWARE setting as shown below.
+Reminder: these changes only apply to working with Django on Codio. 
+Do not make these changes to a project you plan on making available on the internet.
+"""
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'blango.urls'
