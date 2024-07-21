@@ -1,10 +1,11 @@
 from django.contrib import admin
-from blog.models import Tag, Post
+from blog.models import Tag, Post, Comment
 
 """
  lets you create, edit and delete any Django model instances that you choose. 
 """
 admin.site.register(Tag)
+admin.site.register(Comment)
 
 class PostAdmin(admin.ModelAdmin):
 
