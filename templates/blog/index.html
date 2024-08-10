@@ -1,38 +1,21 @@
 {% extends "base.html" %}
 {% load blog_extras %}
 {% block content %}
-
-<h2>Blog Posts</h2>
-{% for post in posts %}
-<div class="row">
-  <div class="col">
-    <h3>{{ post.title }}</h3>
-<small>By
-    {% if post.author == request.user %}
-        <strong>me</strong>
-    {% else %}
-        {% if post.author.email %}
-            <a href="mailto:{{ post.author.email }}">
-        {% endif %}
-            {% if post.author.first_name and post.author.last_name %}
-                {{ post.author.first_name }} {{ post.author.last_name }}
-            {% else %}
-                {{ post.author.username }}
-            {% endif %}
-        {% if post.author.email %}
-            </a>
-        {% endif %}
-    {% endif %}
-    on {{ post.published_at|date:"M, d Y" }}
-</small>    <p>{{ post.summary }}</p>
-    <p>
-      ({{ post.content|wordcount }} words)
-      <a href="#">Read More</a>
-    </p>
-  </div>
-</div>
-{% endfor %}
-
+    <h2>Blog Posts</h2>
+    {% for post in posts %}
+    {% row "border-bottom" %}
+        {% col %}
+            <h3>{{ post.title }}</h3>
+            {% include "blog/post-byline.html" %}
+            <p>{{ post.summary }}</p>
+            <p>
+                ({{ post.content|wordcount }} words)
+                <a href="{% url "blog-post-detail" post.slug %}">Read More</a>
+            </p>
+        {% endcol %}
+    {% endrow %}
+    {% endfor %}
+{% endblock %}
 
     <!-- Extra small (xs) <576px
 Small (sm) ≥576px
@@ -40,4 +23,3 @@ Medium (md) ≥768px
 Large (lg) ≥992px
 Extra large (xl) ≥1200px
 Extra extra large (xxl) ≥1400px -->
-{% endblock %}
