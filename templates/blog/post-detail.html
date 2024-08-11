@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load blog_extras %}
 {% block content %}
@@ -12,6 +13,7 @@
         {{ post.content|safe }}
     {% endcol %}
 {% endrow %}
+{% include "blog/post-comments.html" %}
 {% row %}
     {% col %}
         {% recent_posts post %}
