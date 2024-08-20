@@ -9,11 +9,25 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def get_ip(request):
+  from django.http import HttpResponse
+  return HttpResponse(request.META['REMOTE_ADDR'])
+
 #in this case we want to cache the response for 300 seconds (5 minutes)
 # @cache_page(300)
 # @vary_on_headers("Cookie")
 def index(request):
-    posts = Post.objects.filter(published_at__lte=timezone.now())
+    # posts = (
+    #   Post.objects.filter(published_at__lte=timezone.now())
+    #   .select_related("author")
+    #   .only("title", "content","summary","author","published_at","slug")
+    # )
+    # posts = (
+    #   Post.objects.filter(published_at__lte=timezone.now())
+    #   .select_related("author")
+    #   .defer("created_at", "modified_at")
+    # )
+    posts = Post.objects.filter(published_at__lte=timezone.now()).select_related("author")
     logger.debug("Got %d posts", len(posts))
     return render(request, "blog/index.html", {"posts": posts})
 
