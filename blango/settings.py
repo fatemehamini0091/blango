@@ -57,6 +57,7 @@ class Dev(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'blango_auth',
+        'django_registration',
         'blog',
         'crispy_forms',
         'crispy_bootstrap5',
@@ -175,6 +176,8 @@ class Dev(Configuration):
 
     CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
     CRISPY_TEMPLATE_PACK = 'bootstrap5'
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    ACCOUNT_ACTIVATION_DAYS = 7
 
 class Prod(Dev):
   DEBUG = False
